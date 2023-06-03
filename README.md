@@ -1,3 +1,3 @@
 16-bit game "Trixie and diamonds" for MS-DOS. Developed on QuickBasic 4.5 and NASM.
 
-16-битная игра "Трикси и алмазы" для MS-DOS. Реализовано на QuickBasic 4.5 и NASM.
+16-Р±РёС‚РЅР°СЏ РёРіСЂР° "РўСЂРёРєСЃРё Рё Р°Р»РјР°Р·С‹" РґР»СЏ MS-DOS. Р РµР°Р»РёР·РѕРІР°РЅРѕ РЅР° QuickBasic 4.5 Рё NASM.
