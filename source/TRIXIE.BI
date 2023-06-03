@@ -1,0 +1,159 @@
+'$DYNAMIC
+
+TYPE GameObject
+  x AS INTEGER
+  y AS INTEGER
+  vx AS INTEGER
+  killed AS INTEGER
+  tag AS INTEGER
+END TYPE
+
+TYPE Options
+  showfps AS INTEGER
+  showlog AS INTEGER
+END TYPE
+
+TYPE TextBlock
+  str AS STRING * 40
+  x AS INTEGER
+  y AS INTEGER
+  cnt AS INTEGER
+END TYPE
+
+DECLARE SUB UpdateAnimations ()
+DECLARE SUB RenderPanel ()
+DECLARE SUB RenderBackground ()
+DECLARE SUB LoadResources ()
+DECLARE SUB TryJump (y AS INTEGER)
+DECLARE SUB TryFire (lastdir AS INTEGER)
+DECLARE SUB RemoveKilledGameObjects (objs() AS GameObject, cnt AS INTEGER)
+DECLARE SUB NewMonster (m AS GameObject)
+DECLARE SUB NewBonus (b AS GameObject)
+DECLARE SUB LoadOpt ()
+DECLARE SUB LoadSounds ()
+DECLARE SUB RenderEndGame (iswin AS INTEGER)
+DECLARE SUB SetCustomColors ()
+DECLARE SUB DrawBorder (borderx AS INTEGER, borderw AS INTEGER, bordery AS INTEGER, borderh AS INTEGER)
+DECLARE SUB ShowFPSIfSet ()
+DECLARE FUNCTION RenderHelpPage% ()
+DECLARE SUB LoadScene (datafile AS STRING, scenen AS INTEGER)
+DECLARE SUB DrawScene (scenen AS INTEGER)
+DECLARE FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER, w2 AS INTEGER)
+DECLARE SUB UpdateIndicator (indpos AS INTEGER)
+DECLARE FUNCTION WaitTicks% (TickN AS INTEGER)
+DECLARE SUB LoadTexts ()
+
+CONST MEMSPRITE = 32000
+CONST MEMMONSTERS = 16000
+CONST STARTPAL = 20
+CONST TEXTCOLOR = STARTPAL - 1
+CONST GRAYCOLOR = STARTPAL - 2
+CONST BORDERC0 = 10
+CONST SKYC0 = 1
+CONST MAXINDPOS = 30
+
+DIM SHARED back(32008) AS INTEGER
+DIM SHARED buf(32008) AS INTEGER
+DIM SHARED bufpanel(4400) AS INTEGER
+DIM SHARED sprites(MEMSPRITE) AS INTEGER
+DIM SHARED monsters(MEMMONSTERS) AS INTEGER
+DIM SHARED font(1024) AS INTEGER
+
+DIM SHARED Ypos(1 TO 3) AS INTEGER
+Ypos(1) = 45
+Ypos(2) = 105
+Ypos(3) = 170
+
+DIM SHARED opt AS Options
+DIM SHARED scenes(80) AS TextBlock
+
+DIM SHARED dup AS Animation ' simple fill code for bug animation update
+DIM SHARED fireball AS Animation
+'DIM SHARED monster1 AS Animation
+'DIM SHARED monster2 AS Animation
+'DIM SHARED monster3 AS Animation
+'DIM SHARED monster4 AS Animation
+'DIM SHARED monster5 AS Animation
+DIM SHARED monsterarr(1 TO 5) AS Animation
+DIM SHARED herowait AS Sprite
+DIM SHARED herowalk AS Animation
+DIM SHARED teleport AS Animation
+DIM SHARED gndmid AS Sprite
+DIM SHARED gndleft AS Sprite
+DIM SHARED gndright AS Sprite
+DIM SHARED gndcave AS Sprite
+DIM SHARED gndstone AS Sprite
+DIM SHARED heart AS Sprite
+DIM SHARED mana AS Sprite
+DIM SHARED bonus AS Sprite
+DIM SHARED heartgray AS Sprite
+DIM SHARED managray AS Sprite
+DIM SHARED bonusgray AS Sprite
+DIM SHARED winimg AS Sprite
+DIM SHARED selector AS Sprite
+DIM SHARED logo AS Sprite
+DIM SHARED starlight AS Sprite
+
+DIM SHARED hero AS GameObject
+DIM SHARED fireobj AS GameObject
+DIM SHARED targety AS INTEGER
+DIM SHARED jump AS INTEGER
+DIM SHARED fire AS INTEGER
+DIM SHARED manacount AS INTEGER
+DIM SHARED heartcount AS INTEGER
+DIM SHARED bonuscount AS INTEGER
+DIM SHARED hitmode AS INTEGER
+
+CONST TRUE = 1
+CONST FALSE = 0
+
+' game balance
+DIM SHARED MonsterSpeed(1 TO 5) AS INTEGER
+MonsterSpeed(1) = 1
+MonsterSpeed(2) = 2
+MonsterSpeed(3) = 3
+MonsterSpeed(4) = 1
+MonsterSpeed(5) = 2
+CONST HEROSPEED = 2
+CONST FIRESPEED = 6
+CONST FIREMANACOST = 3
+CONST NEXTMANATICKS = 72
+CONST NEXTMONSTERTICKS = 48
+CONST NEXTBONUSTICKS = 64
+CONST PROTECTAFTERDAMAGETICKS = 24
+
+CONST MAXMANA = 8
+CONST MAXBONUS = 15
+
+DIM t0 AS SINGLE
+DIM mx(0 TO 31) AS GameObject
+DIM mcount AS INTEGER
+DIM bx(0 TO 31) AS GameObject
+DIM bcount AS INTEGER
+
+DIM spos(1 TO 4) AS INTEGER
+spos(1) = 12
+spos(2) = 27
+spos(3) = 42
+spos(4) = 57
+DIM SHARED menus$(1 TO 4)
+
+DIM SHARED helppage AS INTEGER
+
+DIM SHARED soundgetbonus AS STRING
+DIM SHARED soundfireball AS STRING
+DIM SHARED soundmenu AS STRING
+DIM SHARED soundteleport AS STRING
+DIM SHARED soundhit AS STRING
+
+DIM SHARED msgload AS STRING
+DIM SHARED msgpress AS STRING
+DIM SHARED msgspace AS STRING
+DIM SHARED msgwin AS STRING
+DIM SHARED msgfail AS STRING
+DIM SHARED msgcancel AS STRING
+DIM SHARED msgpage AS STRING
+DIM SHARED msghelp AS STRING
+
+RANDOMIZE (TIMER)
+
