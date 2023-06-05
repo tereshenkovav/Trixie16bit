@@ -1,16 +1,16 @@
 5
-ИГРА
+GAME
 130
 40
-  Задача - собрать 15 diamonds
-30
+  GOAL - collect 15 diamonds
+20
 60
-и не потерять весь запас здоровья
-30
+without losing all health by
+20
 70
-при контакте с монстрами.
-30
+touching the monsters.
+20
 80
-Остаток здоровья показан так:
-30
+Remaining health is shown as:
+20
 133
