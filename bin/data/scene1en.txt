@@ -1,34 +1,34 @@
 11
-ИСТОРИЯ
+STORY
 130
 40
-  У Великой и Могучей
+  For Great and Powerful
 90
 55
-Trixie - дела неважные.
+Triexie things turned sour.
 90
 65
-За последнее выступление
+She got only a coin for
 90
 75
-получила одну монетку.
+the last show. And for
 90
 85
-А за предпоследнее...
+the one before... even
 90
 95
-чуть поменьше.
+less.
 90
 105
-  Купив на последние деньги сидр
-30
+  Having spent last money on 
+20
 120
-от Эпплджек, она пошла в замок
-30
+Applejack's cider, she went to the
+20
 130
-к лучшей подруге, втайне надеясь
-30
+caste of her best friend, secretly
+20
 140
-получить совет или помощь.
-30
+hoping to get a piece of advice.
+20
 150
