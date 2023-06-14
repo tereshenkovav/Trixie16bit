@@ -96,11 +96,7 @@ CALL drawSpriteTransp(buf(), sprites(), selector.BufPos, 90, spos(teksel))
 FOR i = 1 TO 5
   CALL drawString(buf(), font(), 120, spos(i) + 7, menus$(i), TEXTCOLOR)
 NEXT i
-IF teklang = "ru" THEN
-  CALL drawSprite(buf(), sprites(), slangru.BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
-ELSE
-  CALL drawSprite(buf(), sprites(), slangen.BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
-END IF
+CALL drawSprite(buf(), sprites(), slang(teklang).BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
 
 FOR x = 0 TO 7
   CALL drawSprite(buf(), sprites(), gndstone.BufPos, x * gndstone.W, 160 - gndstone.H)
@@ -158,13 +154,14 @@ CASE CHR$(13), CHR$(32):
     GOTO startgame
   END IF
   IF teksel = 3 THEN
-    IF teklang = "en" THEN teklang = "ru" ELSE teklang = "en"
+    teklang = teklang + 1
+    IF teklang >= LANGCOUNT THEN teklang = 0
     CALL LoadTexts
     FOR i = 1 TO 5
-      CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + teklang + ".txt", i)
+      CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + langs$(teklang) + ".txt", i)
     NEXT i
     CALL initSpriteBuf(slogos())
-    CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + teklang + ".pcx")
+    CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
     PUT (35, 10), slogos(logo.BufPos), PSET
   END IF
   IF teksel = 4 THEN
@@ -467,9 +464,9 @@ FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER, w2 AS I
 END FUNCTION
 
 SUB LoadLangs
-  langs$(1) = "ru"
-  langs$(2) = "en"
-  teklang = "en"
+  langs$(0) = "ru"
+  langs$(1) = "en"
+  teklang = 1
 END SUB
 
 REM $DYNAMIC
@@ -530,13 +527,14 @@ CALL LoadTranspSpriteInBuf(sprites(), gndstone, "data\gnd_ston.pcx", 0, 0)
 CALL UpdateIndicator(ind)
 CALL LoadTranspSpriteInBuf(sprites(), starlight, "data\star.pcx", 0, 0)
 CALL UpdateIndicator(ind)
-CALL LoadSpriteInBuf(sprites(), slangen, "data\lang_en.pcx")
-CALL LoadSpriteInBuf(sprites(), slangru, "data\lang_ru.pcx")
-CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + teklang + ".pcx")
+FOR i = 0 TO LANGCOUNT - 1
+  CALL LoadSpriteInBuf(sprites(), slang(i), "data\lang_" + langs$(i) + ".pcx")
+NEXT i
+CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
 CALL UpdateIndicator(ind)
 
 FOR i = 1 TO 5
-  CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + teklang + ".txt", i)
+  CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + langs$(teklang) + ".txt", i)
 NEXT i
  
 END SUB
@@ -576,7 +574,7 @@ END SUB
 
 SUB LoadTexts
 
-  OPEN "DATA\texts_" + teklang + ".dat" FOR INPUT AS #1
+  OPEN "DATA\texts_" + langs$(teklang) + ".dat" FOR INPUT AS #1
   LINE INPUT #1, msgload$
   LINE INPUT #1, msgpress$
   LINE INPUT #1, msgspace$
