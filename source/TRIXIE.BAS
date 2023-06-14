@@ -466,7 +466,15 @@ END FUNCTION
 SUB LoadLangs
   langs$(0) = "ru"
   langs$(1) = "en"
-  teklang = 1
+  teklang = 0
+  OPEN "data\deflang" FOR INPUT AS #1
+  IF NOT EOF(1) THEN
+    INPUT #1, s$
+    FOR i = 0 TO LANGCOUNT - 1
+      IF langs$(i) = s$ THEN teklang = i
+    NEXT i
+  END IF
+  CLOSE #1
 END SUB
 
 REM $DYNAMIC
