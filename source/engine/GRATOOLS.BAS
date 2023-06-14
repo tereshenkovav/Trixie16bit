@@ -207,8 +207,8 @@ SUB getMouse (MouseX AS INTEGER, MouseY AS INTEGER, ButLeft AS INTEGER, ButRight
 END SUB
 
 SUB initSpriteBuf (buf() AS INTEGER)
-  buf(0) = 0
-  buf(1) = 2
+  buf(0) = 1
+  buf(1) = 0
 END SUB
 
 SUB internalLoadAllInBuf (buf() AS INTEGER, Sprite AS Sprite, Anim AS Animation, mode AS INTEGER, FileName AS STRING, FrameCount AS INTEGER, FPS AS INTEGER, TranspX AS INTEGER, TranspY AS INTEGER, SetGray AS INTEGER)
@@ -353,7 +353,7 @@ SUB internalLoadAllInBuf (buf() AS INTEGER, Sprite AS Sprite, Anim AS Animation,
 
     DEF SEG = VARSEG(buf(Handle + 2))
     bufp = VARPTR(buf(Handle + 2))
-    FOR y = 0 TO Sprite.h
+    FOR y = 0 TO Sprite.h - 1
        FOR x = 0 TO Sprite.w - 1
           POKE bufp, Pic(x, y)
           bufp = bufp + 1
@@ -378,7 +378,7 @@ SUB internalLoadAllInBuf (buf() AS INTEGER, Sprite AS Sprite, Anim AS Animation,
 
       DEF SEG = VARSEG(buf(Handle + 2))
       bufp = VARPTR(buf(Handle + 2))
-      FOR y = 0 TO Anim.h
+      FOR y = 0 TO Anim.h - 1
          FOR x = 0 TO Anim.w - 1
             POKE bufp, Pic(x + Anim.w * f, y)
             bufp = bufp + 1
