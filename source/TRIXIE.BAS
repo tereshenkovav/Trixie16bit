@@ -6,6 +6,7 @@ CLS
 SCREEN 13
 
 CALL LoadOpt
+CALL LoadLangs
 CALL LoadTexts
 IF opt.showlog THEN CALL enableDebug
 CALL ResetSpriteLoader(STARTPAL)
@@ -19,6 +20,7 @@ CALL setUpBuffer(back(), 320, 180, SKYC0 + 7)
 CALL RenderBackground
 IF opt.showlog THEN PRINT FRE(-1) / 1024
 CALL initSpriteBuf(sprites())
+CALL initSpriteBuf(slogos())
 CALL initSpriteBuf(monsters())
 
 CALL LoadResources
@@ -64,6 +66,7 @@ CALL SetNewPalette
 IF opt.showlog THEN
 PRINT getLoaderReport$
 PRINT "sprites:"; getBufferReport$(sprites(), MEMSPRITE)
+PRINT "logos:"; getBufferReport$(slogos(), MEMLOGOS)
 PRINT "monster:"; getBufferReport$(monsters(), MEMMONSTERS)
 PRINT "Press any key"
 DO WHILE INKEY$ = "": LOOP
@@ -79,9 +82,7 @@ teksel = 1
 
 CALL startFPSCounter
 
-CALL setUpBuffer(bufpanel(), 219, 40, 0)
-CALL drawSprite(bufpanel(), sprites(), logo.BufPos, 0, 0)
-PUT (50, 3), bufpanel(0), PSET
+PUT (35, 10), slogos(logo.BufPos), PSET
 
 DO WHILE TRUE
 
@@ -89,12 +90,17 @@ t0 = TIMER
 
 CALL setUpBuffer(buf(), 320, 160, 0)
 
-CALL DrawBorder(80, 180, 2, 86)
+CALL DrawBorder(70, 180, 0, 96)
 
-CALL drawSpriteTransp(buf(), sprites(), selector.BufPos, 105, spos(teksel))
-FOR i = 1 TO 4
-  CALL drawString(buf(), font(), 140, spos(i) + 7, menus$(i), TEXTCOLOR)
+CALL drawSpriteTransp(buf(), sprites(), selector.BufPos, 90, spos(teksel))
+FOR i = 1 TO 5
+  CALL drawString(buf(), font(), 120, spos(i) + 7, menus$(i), TEXTCOLOR)
 NEXT i
+IF teklang = "ru" THEN
+  CALL drawSprite(buf(), sprites(), slangru.BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
+ELSE
+  CALL drawSprite(buf(), sprites(), slangen.BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
+END IF
 
 FOR x = 0 TO 7
   CALL drawSprite(buf(), sprites(), gndstone.BufPos, x * gndstone.W, 160 - gndstone.H)
@@ -152,19 +158,29 @@ CASE CHR$(13), CHR$(32):
     GOTO startgame
   END IF
   IF teksel = 3 THEN
+    IF teklang = "en" THEN teklang = "ru" ELSE teklang = "en"
+    CALL LoadTexts
+    FOR i = 1 TO 5
+      CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + teklang + ".txt", i)
+    NEXT i
+    CALL initSpriteBuf(slogos())
+    CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + teklang + ".pcx")
+    PUT (35, 10), slogos(logo.BufPos), PSET
+  END IF
+  IF teksel = 4 THEN
     CLS
     helppage = 1
     DO WHILE RenderHelpPage = TRUE: LOOP
     GOTO mainmenu
   END IF
-  IF teksel = 4 THEN END
+  IF teksel = 5 THEN END
 CASE CHR$(0) + "H":
   IF teksel > 1 THEN
     teksel = teksel - 1
     PLAY soundmenu
   END IF
 CASE CHR$(0) + "P":
-  IF teksel < 4 THEN
+  IF teksel < 5 THEN
     teksel = teksel + 1
     PLAY soundmenu
   END IF
@@ -450,6 +466,12 @@ FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER, w2 AS I
  
 END FUNCTION
 
+SUB LoadLangs
+  langs$(1) = "ru"
+  langs$(2) = "en"
+  teklang = "en"
+END SUB
+
 REM $DYNAMIC
 SUB LoadOpt
 
@@ -506,16 +528,16 @@ CALL LoadTranspSpriteInBuf(sprites(), gndcave, "data\gnd_cave.pcx", 0, 0)
 CALL UpdateIndicator(ind)
 CALL LoadTranspSpriteInBuf(sprites(), gndstone, "data\gnd_ston.pcx", 0, 0)
 CALL UpdateIndicator(ind)
-CALL LoadSpriteInBuf(sprites(), logo, "data\logo.pcx")
-CALL UpdateIndicator(ind)
 CALL LoadTranspSpriteInBuf(sprites(), starlight, "data\star.pcx", 0, 0)
 CALL UpdateIndicator(ind)
+CALL LoadSpriteInBuf(sprites(), slangen, "data\lang_en.pcx")
+CALL LoadSpriteInBuf(sprites(), slangru, "data\lang_ru.pcx")
+CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + teklang + ".pcx")
+CALL UpdateIndicator(ind)
 
-CALL LoadScene("DATA\scene1.txt", 1)
-CALL LoadScene("DATA\scene2.txt", 2)
-CALL LoadScene("DATA\scene3.txt", 3)
-CALL LoadScene("DATA\scene4.txt", 4)
-CALL LoadScene("DATA\scene5.txt", 5)
+FOR i = 1 TO 5
+  CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + teklang + ".txt", i)
+NEXT i
  
 END SUB
 
@@ -554,7 +576,7 @@ END SUB
 
 SUB LoadTexts
 
-  OPEN "DATA\texts.dat" FOR INPUT AS #1
+  OPEN "DATA\texts_" + teklang + ".dat" FOR INPUT AS #1
   LINE INPUT #1, msgload$
   LINE INPUT #1, msgpress$
   LINE INPUT #1, msgspace$
@@ -567,6 +589,7 @@ SUB LoadTexts
   LINE INPUT #1, menus$(2)
   LINE INPUT #1, menus$(3)
   LINE INPUT #1, menus$(4)
+  LINE INPUT #1, menus$(5)
   CLOSE #1
 
 END SUB

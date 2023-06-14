@@ -42,8 +42,10 @@ DECLARE FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER,
 DECLARE SUB UpdateIndicator (indpos AS INTEGER)
 DECLARE FUNCTION WaitTicks% (TickN AS INTEGER)
 DECLARE SUB LoadTexts ()
+DECLARE SUB LoadLangs ()
 
-CONST MEMSPRITE = 32000
+CONST MEMSPRITE = 26000
+CONST MEMLOGOS = 3020
 CONST MEMMONSTERS = 16000
 CONST STARTPAL = 20
 CONST TEXTCOLOR = STARTPAL - 1
@@ -56,6 +58,7 @@ DIM SHARED back(32008) AS INTEGER
 DIM SHARED buf(32008) AS INTEGER
 DIM SHARED bufpanel(4400) AS INTEGER
 DIM SHARED sprites(MEMSPRITE) AS INTEGER
+DIM SHARED slogos(MEMLOGOS) AS INTEGER
 DIM SHARED monsters(MEMMONSTERS) AS INTEGER
 DIM SHARED font(1024) AS INTEGER
 
@@ -66,7 +69,6 @@ Ypos(3) = 170
 
 DIM SHARED opt AS Options
 DIM SHARED scenes(80) AS TextBlock
-
 DIM SHARED dup AS Animation ' simple fill code for bug animation update
 DIM SHARED fireball AS Animation
 'DIM SHARED monster1 AS Animation
@@ -92,6 +94,8 @@ DIM SHARED bonusgray AS Sprite
 DIM SHARED winimg AS Sprite
 DIM SHARED selector AS Sprite
 DIM SHARED logo AS Sprite
+DIM SHARED slangru AS Sprite
+DIM SHARED slangen AS Sprite
 DIM SHARED starlight AS Sprite
 
 DIM SHARED hero AS GameObject
@@ -131,12 +135,13 @@ DIM mcount AS INTEGER
 DIM bx(0 TO 31) AS GameObject
 DIM bcount AS INTEGER
 
-DIM spos(1 TO 4) AS INTEGER
-spos(1) = 12
-spos(2) = 27
-spos(3) = 42
-spos(4) = 57
-DIM SHARED menus$(1 TO 4)
+DIM spos(1 TO 5) AS INTEGER
+spos(1) = 10
+spos(2) = 24
+spos(3) = 38
+spos(4) = 51
+spos(5) = 65
+DIM SHARED menus$(1 TO 5)
 
 DIM SHARED helppage AS INTEGER
 
@@ -154,6 +159,9 @@ DIM SHARED msgfail AS STRING
 DIM SHARED msgcancel AS STRING
 DIM SHARED msgpage AS STRING
 DIM SHARED msghelp AS STRING
+
+DIM SHARED teklang AS STRING
+DIM SHARED langs$(1 TO 2)
 
 RANDOMIZE (TIMER)
 
