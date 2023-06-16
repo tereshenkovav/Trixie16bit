@@ -207,8 +207,8 @@ SUB getMouse (MouseX AS INTEGER, MouseY AS INTEGER, ButLeft AS INTEGER, ButRight
 END SUB
 
 SUB initSpriteBuf (buf() AS INTEGER)
-  buf(0) = 1
-  buf(1) = 0
+  buf(0) = 0
+  buf(1) = 2
 END SUB
 
 SUB internalLoadAllInBuf (buf() AS INTEGER, Sprite AS Sprite, Anim AS Animation, mode AS INTEGER, FileName AS STRING, FrameCount AS INTEGER, FPS AS INTEGER, TranspX AS INTEGER, TranspY AS INTEGER, SetGray AS INTEGER)

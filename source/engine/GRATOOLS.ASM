@@ -122,7 +122,7 @@ drawLineVertAsm:
         
 	mov	ax, [es:di]
 	shr	ax, 3
-	mov 	[bufwidth], ax ; store buf width
+	mov 	[cs:bufwidth], ax ; store buf width
 	
 	add	di, 4	
 
@@ -137,7 +137,7 @@ drawLineVertAsm:
 	sub	cx,[bp+LINEVERT_Y1] ; y2-y1
 	inc	cx
 
-	mov 	dx, [bufwidth]
+	mov 	dx, [cs:bufwidth]
 	dec 	dx
 
 	mov	ax,[bp+LINEVERT_COLOR] ; color
@@ -153,8 +153,6 @@ DRAWSPRITE_X equ 10
 DRAWSPRITE_Y equ 8
 DRAWSPRITE_TRANSP equ 6
 TRANSPCOLOR equ 127
-
-spritewidth dw 0
 
 global drawSpriteAsm
 drawSpriteAsm:
@@ -173,7 +171,7 @@ drawSpriteAsm:
         
 	mov	ax, [es:di]
 	shr	ax, 3
-	mov 	[bufwidth], ax ; store buf width
+	mov 	[cs:bufwidth], ax ; store buf width
 	            
 	add	di, 4
 
@@ -214,7 +212,7 @@ sprite_fin_transp:
 
 draw_sprite_fin:
 
-	mov	ax, [bufwidth]
+	mov	ax, [cs:bufwidth]
         add	di, ax
 	sub	di, dx
 
@@ -242,7 +240,7 @@ drawSpriteMirrorAsm:
         
 	mov	ax, [es:di]
 	shr	ax, 3
-	mov 	[bufwidth], ax ; store buf width
+	mov 	[cs:bufwidth], ax ; store buf width
 	            
 	add	di, 4
 
@@ -291,7 +289,7 @@ sprite_fin_transp1:
 
 draw_sprite_fin1:
 
-	mov	ax, [bufwidth]
+	mov	ax, [cs:bufwidth]
         add	di, ax
 	sub	di, dx
 	add	si, dx
@@ -374,7 +372,7 @@ drawCharAsm:
         
 	mov	ax, [es:di]
 	shr	ax, 3
-	mov 	[bufwidth], ax ; store buf width
+	mov 	[cs:bufwidth], ax ; store buf width
 	            
 	add	di, 4
 
@@ -410,7 +408,7 @@ cicle_char_fin:
 	cmp 	bx,8
 	jne 	cicle_char_x
         
-        mov	ax, [bufwidth]
+        mov	ax, [cs:bufwidth]
         add	di, ax
 	sub	di, CHAR_SIZE
 
@@ -438,7 +436,7 @@ fillRectAsm:
 
 	mov	ax, [es:di]
 	shr	ax, 3
-	mov 	[bufwidth], ax ; store buf width
+	mov 	[cs:bufwidth], ax ; store buf width
 
 	add	di, 4
 
@@ -458,7 +456,7 @@ cicle_rect_y:
 	mov	ax,[bp+FILLRECT_C]
 	rep	stosb
 
-	mov	ax, [bufwidth]
+	mov	ax, [cs:bufwidth]
         add	di, ax
 	sub	di, dx
 
