@@ -481,6 +481,7 @@ REM $DYNAMIC
 SUB LoadOpt
 
   opt.showfps = 0
+  opt.showlog = 0
 
   OPEN "DATA\options" FOR INPUT AS #1
   WHILE NOT EOF(1)
@@ -858,8 +859,10 @@ END SUB
 
 SUB ShowFPSIfSet
 IF opt.showfps THEN
-  info$ = "FPS:" + STR$(getFPS%) + " Kb:" + STR$(CINT(FRE(-1) / 1024))
+  info$ = "FPS:" + STR$(getFPS%)
   CALL drawString(buf(), font(), 5, 0, info$, TEXTCOLOR)
+  info$ = "Fre" + STR$(CINT(FRE(-1) / 1024)) + "K"
+  CALL drawString(buf(), font(), 5, 9, info$, TEXTCOLOR)
 END IF
 END SUB
 
