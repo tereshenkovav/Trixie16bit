@@ -90,7 +90,7 @@ Section "$(GameGameName)"
   File /r dosbox\*
   File main.ico
   SetOutPath $INSTDIR\bin
-  File /r ..\bin\*
+  File /r ..\..\bin\*
 
   FileOpen $0 "$INSTDIR\game\data\deflang" w
   FileWrite $0 '${GAMELANG}'

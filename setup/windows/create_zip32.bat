@@ -6,7 +6,7 @@ exit
 :mainproc
 
 rm -f Trixie16bit-%2-%VERSION%-DOSBox-Win32.zip
-7z a -mx9 Trixie16bit-%2-%VERSION%-DOSBox-Win32.zip ..\bin
+7z a -mx9 Trixie16bit-%2-%VERSION%-DOSBox-Win32.zip ..\..\bin
 cd dosbox
 7z a -mx9 ..\Trixie16bit-%2-%VERSION%-DOSBox-Win32.zip *
 cd ..
