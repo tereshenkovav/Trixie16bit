@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=Trixie16bit
+Icon[ru]=Trixie16bit
+Name[ru]=Trixie16bit
+Exec=dosbox -conf bin/dosbox.conf -noconsole
+Name=Trixie16bit
+Categories=Game
