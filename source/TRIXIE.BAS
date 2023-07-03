@@ -54,7 +54,7 @@ NEXT p
 
 IF WaitTicks(36) THEN GOTO skipintro
 
-CALL drawString(buf(), font(), 180, 180, msgpress$ + " " + msgspace$, TEXTCOLOR)
+CALL drawString(buf(), font(), 215, 185, msgpress$ + " " + msgspace$, TEXTCOLOR)
 PUT (0, 0), buf(0), PSET
 
 DO WHILE INKEY$ = "": LOOP
