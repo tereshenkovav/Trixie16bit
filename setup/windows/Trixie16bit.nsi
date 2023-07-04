@@ -39,7 +39,7 @@ Function .onInit
 
   StrCpy $INSTDIR $PROGRAMFILES\Trixie16bit
 
-  IfFileExists $INSTDIR\game\game.exe +3
+  IfFileExists $INSTDIR\bin\game.exe +3
   StrCpy $is_update "0"
   Goto +2
   StrCpy $is_update "1"
@@ -92,7 +92,7 @@ Section "$(GameGameName)"
   SetOutPath $INSTDIR\bin
   File /r ..\..\bin\*
 
-  FileOpen $0 "$INSTDIR\game\data\deflang" w
+  FileOpen $0 "$INSTDIR\bin\data\deflang" w
   FileWrite $0 '${GAMELANG}'
   FileClose $0
 
