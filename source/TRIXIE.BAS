@@ -5,6 +5,8 @@ DEFINT A-Z
 CLS
 SCREEN 13
 
+soundon = TRUE
+
 CALL LoadOpt
 CALL LoadLangs
 CALL LoadTexts
@@ -90,10 +92,10 @@ t0 = TIMER
 
 CALL setUpBuffer(buf(), 320, 160, 0)
 
-CALL DrawBorder(70, 180, 0, 96)
+CALL DrawBorder(62, 180, 0, 100)
 
 CALL drawSpriteTransp(buf(), sprites(), selector.BufPos, 90, spos(teksel))
-FOR i = 1 TO 5
+FOR i = 1 TO 6
   CALL drawString(buf(), font(), 120, spos(i) + 7, menus$(i), TEXTCOLOR)
 NEXT i
 CALL drawSprite(buf(), sprites(), slang(teklang).BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
@@ -165,21 +167,25 @@ CASE CHR$(13), CHR$(32):
     PUT (35, 10), slogos(logo.BufPos), PSET
   END IF
   IF teksel = 4 THEN
+    soundon = 1 - soundon
+    CALL LoadTexts
+  END IF
+  IF teksel = 5 THEN
     CLS
     helppage = 1
     DO WHILE RenderHelpPage = TRUE: LOOP
     GOTO mainmenu
   END IF
-  IF teksel = 5 THEN END
+  IF teksel = 6 THEN END
 CASE CHR$(0) + "H":
   IF teksel > 1 THEN
     teksel = teksel - 1
-    PLAY soundmenu
+    IF soundon THEN PLAY soundmenu
   END IF
 CASE CHR$(0) + "P":
-  IF teksel < 5 THEN
+  IF teksel < 6 THEN
     teksel = teksel + 1
-    PLAY soundmenu
+    IF soundon THEN PLAY soundmenu
   END IF
 END SELECT
 
@@ -304,14 +310,14 @@ FOR i = 0 TO mcount - 1
     hitmode = PROTECTAFTERDAMAGETICKS
     heartcount = heartcount - 1
     IF heartcount = 0 THEN
-      PLAY soundteleport
+      IF soundon THEN PLAY soundteleport
       victory = FALSE
       gameover = TRUE
       jump = TRUE
       teleport.TekFrame = 0
       'GOTO endgame
     ELSE
-      PLAY soundhit
+      IF soundon THEN PLAY soundhit
     END IF
   END IF
   END IF
@@ -330,11 +336,11 @@ FOR i = 0 TO bcount - 1
   IF (hitmode = 0) THEN
   IF (bx(i).y = hero.y) THEN
   IF IsBlockIntersect(bx(i).x, bonus.W, hero.x, herowait.W) THEN
-    PLAY soundgetbonus
+    IF soundon THEN PLAY soundgetbonus
     bx(i).killed = TRUE
     bonuscount = bonuscount + 1
     IF bonuscount = MAXBONUS THEN
-      PLAY soundteleport
+      IF soundon THEN PLAY soundteleport
       victory = TRUE
       gameover = TRUE
       jump = TRUE
@@ -565,7 +571,7 @@ SUB LoadScene (datafile AS STRING, scenen AS INTEGER)
 END SUB
 
 SUB LoadSounds
- 
+
   OPEN "DATA\sounds" FOR INPUT AS #1
   INPUT #1, optline$: INPUT #1, optline$
   soundgetbonus = "MB" + optline$
@@ -597,7 +603,16 @@ SUB LoadTexts
   LINE INPUT #1, menus$(3)
   LINE INPUT #1, menus$(4)
   LINE INPUT #1, menus$(5)
+  LINE INPUT #1, menus$(6)
+  LINE INPUT #1, msgon$
+  LINE INPUT #1, msgoff$
   CLOSE #1
+
+  IF soundon THEN
+    menus$(4) = menus$(4) + msgon$
+  ELSE
+    menus$(4) = menus$(4) + msgoff$
+  END IF
 
 END SUB
 
@@ -873,7 +888,7 @@ SUB TryFire (lastdir AS INTEGER)
   mananeed = FIREMANACOST
   IF manacount < mananeed THEN EXIT SUB
 
-  PLAY soundfireball
+  IF soundon THEN PLAY soundfireball
 
   manacount = manacount - mananeed
   fire = TRUE
@@ -898,7 +913,7 @@ SUB TryJump (y AS INTEGER)
 
   IF manacount < mananeed THEN EXIT SUB
 
-  PLAY soundteleport
+  IF soundon THEN PLAY soundteleport
   manacount = manacount - mananeed
   jump = TRUE
   targety = y

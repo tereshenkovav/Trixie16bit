@@ -134,13 +134,14 @@ DIM mcount AS INTEGER
 DIM bx(0 TO 31) AS GameObject
 DIM bcount AS INTEGER
 
-DIM spos(1 TO 5) AS INTEGER
+DIM spos(1 TO 6) AS INTEGER
 spos(1) = 10
-spos(2) = 24
-spos(3) = 38
-spos(4) = 51
-spos(5) = 65
-DIM SHARED menus$(1 TO 5)
+spos(2) = 22
+spos(3) = 34
+spos(4) = 46
+spos(5) = 58
+spos(6) = 70
+DIM SHARED menus$(1 TO 6)
 
 DIM SHARED helppage AS INTEGER
 
@@ -158,9 +159,12 @@ DIM SHARED msgfail AS STRING
 DIM SHARED msgcancel AS STRING
 DIM SHARED msgpage AS STRING
 DIM SHARED msghelp AS STRING
+DIM SHARED msgon AS STRING
+DIM SHARED msgoff AS STRING
 
 DIM SHARED teklang AS INTEGER
 DIM SHARED langs$(LANGCOUNT)
+DIM SHARED soundon AS INTEGER
 
 RANDOMIZE (TIMER)
 
