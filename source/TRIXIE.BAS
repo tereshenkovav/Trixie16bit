@@ -366,7 +366,7 @@ END IF
 nextmonster = nextmonster - 1
 IF nextmonster = 0 THEN
   nextmonster = NEXTMONSTERTICKS
-  IF mcount < 15 THEN
+  IF (mcount < 15) AND (jump = FALSE) THEN
     CALL NewMonster(mx(mcount))
     mcount = mcount + 1
   END IF
