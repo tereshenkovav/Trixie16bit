@@ -333,7 +333,6 @@ NEXT i
 
 IF gameover = FALSE THEN
 FOR i = 0 TO bcount - 1
-  IF (hitmode = 0) THEN
   IF (bx(i).y = hero.y) THEN
   IF IsBlockIntersect(bx(i).x, bonus.W, hero.x, herowait.W) THEN
     IF soundon THEN PLAY soundgetbonus
@@ -347,7 +346,6 @@ FOR i = 0 TO bcount - 1
       teleport.TekFrame = 0
       'GOTO endgame
     END IF
-  END IF
   END IF
   END IF
 NEXT i
@@ -883,7 +881,6 @@ END SUB
 
 REM $DYNAMIC
 SUB TryFire (lastdir AS INTEGER)
-  IF hitmode > 0 THEN EXIT SUB
 
   mananeed = FIREMANACOST
   IF manacount < mananeed THEN EXIT SUB
@@ -904,8 +901,6 @@ SUB TryFire (lastdir AS INTEGER)
 END SUB
 
 SUB TryJump (y AS INTEGER)
-
-  IF hitmode > 0 THEN EXIT SUB
 
   IF hero.y = y THEN EXIT SUB
   
