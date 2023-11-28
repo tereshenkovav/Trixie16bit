@@ -383,7 +383,19 @@ END IF
 k$ = INKEY$
 IF gameover = FALSE THEN
 SELECT CASE k$
-CASE CHR$(27): victory = 2: GOTO endgame
+CASE CHR$(27)
+  CALL DrawBorder(70, 180, 40, 90)
+  CALL drawSpriteTransp(buf(), sprites(), herowait.BufPos, 80, 52)
+  CALL drawString(buf(), font(), 155, 40 + 25, msgpauseinfo$, TEXTCOLOR)
+  CALL drawString(buf(), font(), 85, 100, msgpauseesc$, TEXTCOLOR)
+  CALL drawString(buf(), font(), 85, 110, msgpausespace$, TEXTCOLOR)
+  PUT (0, 20), buf(0), PSET
+  DO WHILE TRUE
+    k1$ = INKEY$
+    IF k1$ = CHR$(27) THEN GOTO mainmenu
+    IF k1$ = CHR$(32) THEN EXIT DO
+  LOOP
+
 CASE "1": CALL TryJump(Ypos(1))
 CASE "2": CALL TryJump(Ypos(2))
 CASE "3": CALL TryJump(Ypos(3))
@@ -604,6 +616,9 @@ SUB LoadTexts
   LINE INPUT #1, menus$(6)
   LINE INPUT #1, msgon$
   LINE INPUT #1, msgoff$
+  LINE INPUT #1, msgpauseinfo$
+  LINE INPUT #1, msgpauseesc$
+  LINE INPUT #1, msgpausespace$
   CLOSE #1
 
   IF soundon THEN
@@ -729,17 +744,13 @@ borderx = 70
 bordery = 40
 CALL DrawBorder(borderx, 180, bordery, 90)
 
-SELECT CASE iswin
-CASE TRUE
+IF iswin THEN
   info$ = msgwin$
   CALL drawSpriteTransp(buf(), sprites(), winimg.BufPos, borderx + 10, bordery + 10)
-CASE FALSE
+ELSE
   info$ = msgfail$
   CALL drawSpriteTransp(buf(), sprites(), herowait.BufPos, borderx + 20, bordery + 25)
-CASE ELSE
-  info$ = msgcancel$
-  CALL drawSpriteTransp(buf(), sprites(), herowait.BufPos, borderx + 20, bordery + 25)
-END SELECT
+END IF
 
 CALL drawString(buf(), font(), 155, bordery + 25, info$, TEXTCOLOR)
 CALL drawString(buf(), font(), 155, bordery + 50, msgpress$, TEXTCOLOR)
