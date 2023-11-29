@@ -29,7 +29,7 @@ cp -r ../../bin $appdir/usr/bin/game
 export ARCH=x86_64
 
 echo "en" > $appdir/usr/bin/game/data/deflang
-appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-EN-1.1.0-DOSbox-x86_64.AppImage
+appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-EN-1.2.0-DOSbox-x86_64.AppImage
 
 echo "ru" > $appdir/usr/bin/game/data/deflang
-appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-RU-1.1.0-DOSbox-x86_64.AppImage
+appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-RU-1.2.0-DOSbox-x86_64.AppImage
