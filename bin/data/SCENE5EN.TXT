@@ -1,4 +1,4 @@
-9
+10
 CONTROLS
 130
 40
@@ -20,9 +20,12 @@ Up / Down arrow - stop
 Space - toss a fireball
 20
 105
-F10 - pause
+Enter - cast a force shield
 20
 115
-Escape - exit game
+F10 - pause
 20
 125
+Escape - exit game
+20
+135

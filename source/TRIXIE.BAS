@@ -23,6 +23,7 @@ CALL RenderBackground
 IF opt.showlog THEN PRINT FRE(-1) / 1024
 CALL initSpriteBuf(sprites())
 CALL initSpriteBuf(slogos())
+CALL initSpriteBuf(sshield())
 CALL initSpriteBuf(monsters())
 
 CALL LoadResources
@@ -69,6 +70,7 @@ IF opt.showlog THEN
 PRINT getLoaderReport$
 PRINT "sprites:"; getBufferReport$(sprites(), MEMSPRITE)
 PRINT "logos:"; getBufferReport$(slogos(), MEMLOGOS)
+PRINT "shield:"; getBufferReport$(sshield(), MEMSHIELD)
 PRINT "monster:"; getBufferReport$(monsters(), MEMMONSTERS)
 PRINT "Press any key"
 DO WHILE INKEY$ = "": LOOP
@@ -200,6 +202,7 @@ hero.y = Ypos(2): hero.x = 160: hero.vx = 0
 
 jump = FALSE
 fire = FALSE
+shieldmode = 0
 victory = FALSE
 manacount = MAXMANA
 heartcount = 3
@@ -257,6 +260,10 @@ IF hitmode MOD 4 < 2 AND countdown = 0 THEN
   END IF
 END IF
 
+IF shieldmode > 0 AND countdown = 0 THEN
+  CALL drawAnimationTransp(buf(), sshield(), shield, hero.x - 11 + 8, hero.y - 50 + 8)
+END IF
+
 IF fire = TRUE THEN
   IF lastdir = 1 THEN
     CALL drawAnimationTransp(buf(), sprites(), fireball, fireobj.x, fireobj.y - fireball.H)
@@ -294,6 +301,7 @@ IF fire = TRUE THEN
 END IF
 
 IF hitmode > 0 THEN hitmode = hitmode - 1
+IF shieldmode > 0 THEN shieldmode = shieldmode - 1
 
 FOR i = 0 TO mcount - 1
   mx(i).x = mx(i).x + mx(i).vx
@@ -304,6 +312,7 @@ FOR i = 0 TO mcount - 1
   END IF
  
   IF gameover = FALSE THEN
+  IF shieldmode = 0 THEN
   IF hitmode = 0 THEN
   IF (mx(i).y = hero.y) THEN
   IF IsBlockIntersect(mx(i).x, monsterarr(mx(i).tag).W, hero.x, herowait.W) THEN
@@ -319,6 +328,7 @@ FOR i = 0 TO mcount - 1
     ELSE
       IF soundon THEN PLAY soundhit
     END IF
+  END IF
   END IF
   END IF
   END IF
@@ -403,6 +413,7 @@ CASE CHR$(0) + "K": hero.vx = -HEROSPEED: lastdir = -1
 CASE CHR$(0) + "M": hero.vx = HEROSPEED: lastdir = 1
 CASE CHR$(0) + CHR$(68): DO WHILE INKEY$ = "": LOOP
 CASE CHR$(32): CALL TryFire(lastdir)
+CASE CHR$(13): CALL TryShield
 CASE CHR$(0) + "H": hero.vx = 0
 CASE CHR$(0) + "P": hero.vx = 0
 END SELECT
@@ -527,6 +538,7 @@ CALL UpdateIndicator(ind)
 CALL LoadTranspAnimationInBuf(sprites(), herowalk, "data\trx_walk.pcx", 11, 9, 0, 0)
 CALL UpdateIndicator(ind)
 CALL LoadTranspSpriteInBuf(sprites(), herowait, "data\trx_wait.pcx", 0, 0)
+CALL LoadTranspAnimationInBuf(sshield(), shield, "data\shield.pcx", 4, 9, 0, 0)
 CALL UpdateIndicator(ind)
 CALL LoadTranspAnimationInBuf(sprites(), teleport, "data\teleport.pcx", 9, 18, 0, 0)
 CALL UpdateIndicator(ind)
@@ -926,11 +938,22 @@ SUB TryJump (y AS INTEGER)
   teleport.TekFrame = 0
 END SUB
 
+SUB TryShield
+  mananeed = SHIELDMANACOST
+  IF manacount < mananeed THEN EXIT SUB
+
+  IF soundon THEN PLAY soundfireball
+
+  manacount = manacount - mananeed
+  shieldmode = SHIELDTICKS
+END SUB
+
 SUB UpdateAnimations
 
 FOR i = 1 TO 5: CALL updateAnimation(monsterarr(i)): NEXT i
 CALL updateAnimation(fireball)
 CALL updateAnimation(herowalk)
+CALL updateAnimation(shield)
 
 END SUB
 
