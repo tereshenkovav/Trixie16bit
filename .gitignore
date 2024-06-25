@@ -1,3 +1,7 @@
 game*.exe
 *.obj
 data/deflang
+setup/dos/*.zip
+setup/windows/*.zip
+setup/windows/*.exe
+setup/linux/*.AppImage
