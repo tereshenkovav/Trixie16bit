@@ -494,6 +494,9 @@ SUB LoadLangs
   langs$(0) = "ru"
   langs$(1) = "en"
   teklang = 0
+ 
+  IF isFileExists%("data\deflang") = FALSE THEN EXIT SUB
+
   OPEN "data\deflang" FOR INPUT AS #1
   IF NOT EOF(1) THEN
     INPUT #1, s$
