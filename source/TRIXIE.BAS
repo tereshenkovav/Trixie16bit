@@ -161,7 +161,7 @@ CASE CHR$(13), CHR$(32):
     teklang = teklang + 1
     IF teklang >= LANGCOUNT THEN teklang = 0
     CALL LoadTexts
-    FOR i = 1 TO 5
+    FOR i = 1 TO 6
       CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + langs$(teklang) + ".txt", i)
     NEXT i
     CALL initSpriteBuf(slogos())
@@ -573,7 +573,7 @@ NEXT i
 CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
 CALL UpdateIndicator(ind)
 
-FOR i = 1 TO 5
+FOR i = 1 TO 6
   CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + langs$(teklang) + ".txt", i)
 NEXT i
  
@@ -581,7 +581,7 @@ END SUB
 
 REM $STATIC
 SUB LoadScene (datafile AS STRING, scenen AS INTEGER)
-
+  
   OPEN datafile FOR INPUT AS #1
   INPUT #1, cnt
   p = (scenen - 1) * 16
@@ -777,7 +777,7 @@ END SUB
 
 FUNCTION RenderHelpPage%
 
-  MaxHelpPage = 5
+  MaxHelpPage = 6
 
   RenderHelpPage% = TRUE
  
@@ -823,6 +823,9 @@ FUNCTION RenderHelpPage%
     NEXT i
   CASE 5
     CALL DrawScene(5)
+  CASE 6
+    CALL DrawScene(6)
+    CALL drawString(buf(), font(), 240, 40, "v1.2.0", GRAYCOLOR)
   END SELECT
 
 

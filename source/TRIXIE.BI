@@ -72,7 +72,7 @@ Ypos(2) = 105
 Ypos(3) = 170
 
 DIM SHARED opt AS Options
-DIM SHARED scenes(80) AS TextBlock
+DIM SHARED scenes(112) AS TextBlock
 DIM SHARED fireball AS Animation
 'DIM SHARED monster1 AS Animation
 'DIM SHARED monster2 AS Animation
