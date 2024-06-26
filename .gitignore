@@ -1,6 +1,7 @@
 game*.exe
 *.obj
-data/deflang
+bin/data/deflang
+bin/data/version.txt
 setup/dos/*.zip
 setup/windows/*.zip
 setup/windows/*.exe

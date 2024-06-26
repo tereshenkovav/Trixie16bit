@@ -576,7 +576,13 @@ CALL UpdateIndicator(ind)
 FOR i = 1 TO 6
   CALL LoadScene("DATA\scene" + LTRIM$(STR$(i)) + langs$(teklang) + ".txt", i)
 NEXT i
- 
+
+IF isFileExists%("data\version.txt") = FALSE THEN EXIT SUB
+
+OPEN "data\version.txt" FOR INPUT AS #1
+IF NOT EOF(1) THEN INPUT #1, versionstr$
+CLOSE #1
+
 END SUB
 
 REM $STATIC
@@ -825,7 +831,7 @@ FUNCTION RenderHelpPage%
     CALL DrawScene(5)
   CASE 6
     CALL DrawScene(6)
-    CALL drawString(buf(), font(), 240, 40, "v1.2.0", GRAYCOLOR)
+    CALL drawString(buf(), font(), 240, 40, versionstr, GRAYCOLOR)
   END SELECT
 
 
