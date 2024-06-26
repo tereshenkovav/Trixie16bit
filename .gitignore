@@ -2,6 +2,7 @@ game*.exe
 *.obj
 bin/data/deflang
 bin/data/version.txt
+bin/data/credits.txt
 setup/dos/*.zip
 setup/windows/*.zip
 setup/windows/*.exe
