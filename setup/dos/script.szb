@@ -1,0 +1,9 @@
+SetCompressor LZMA
+SetCompressionLevel 9
+ZipFile Trixie16bit-$LANGH$-%VERSION%-DOS.zip
+
+Files ..\..\bin\*.exe
+Dir ..\..\bin\data
+
+SetOutPath data
+Text $LANGL$\r\n deflang

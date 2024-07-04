@@ -12,5 +12,7 @@ echo %BUILDBRANCH% >> ..\..\bin\data\version.txt
 
 SET VERSION=%BUILDTAG:~1%
 
-call create_zip16.bat ru RU
-call create_zip16.bat en EN
+del ..\..\bin\data\deflang
+
+SmartZipBuilder.exe script.szb /LANGL=ru /LANGH=RU
+SmartZipBuilder.exe script.szb /LANGL=en /LANGH=EN

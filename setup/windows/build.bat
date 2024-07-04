@@ -15,5 +15,7 @@ SET VERSION=%BUILDTAG:~1%
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=ru /DUPPERLANG=RU Trixie16bit.nsi
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=en /DUPPERLANG=EN Trixie16bit.nsi
 
-call create_zip32.bat ru RU
-call create_zip32.bat en EN
+del ..\..\bin\data\deflang
+
+SmartZipBuilder.exe script.szb /LANGL=ru /LANGH=RU
+SmartZipBuilder.exe script.szb /LANGL=en /LANGH=EN

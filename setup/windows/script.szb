@@ -1,0 +1,9 @@
+SetCompressor LZMA
+SetCompressionLevel 9
+ZipFile Trixie16bit-$LANGH$-%VERSION%-DOSBox-Win32.zip
+
+Files dosbox\*.*
+Dir ..\..\bin
+
+SetOutPath bin\data
+Text $LANGL$\r\n deflang

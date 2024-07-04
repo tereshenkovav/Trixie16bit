@@ -26,8 +26,8 @@
 Создание дистрибутива для Windows выполняется с помощью программы
 [NSIS](https://nsis.sourceforge.io)
 
-Создание архивов для DOS и Windows выполняется с помощью консольной версии архиватора
-[7-Zip](https://www.7-zip.org)
+Создание архива для Windows выполняется с помощью скриптовой утилиты построения архивов
+[SmartZipBuilder](https://github.com/tereshenkovav/SmartZipBuilder)
 
 Для создания AppImage под Linux необходим инструмент сборки AppImageKit -
 [appimagetool-x86_64.AppImage](https://github.com/AppImage/AppImageKit/releases)
