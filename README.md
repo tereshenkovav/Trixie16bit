@@ -1,5 +1,11 @@
-16-bit game "Trixie and diamonds" for MS-DOS. Developed on QuickBasic 4.5 and NASM.\
-16-битная игра "Трикси и алмазы" для MS-DOS. Реализовано на QuickBasic 4.5 и NASM.
+# 16-битная игра "Трикси и алмазы" для MS-DOS, на основе QuickBasic 4.5 и NASM
+
+[![YooMoney donation](https://img.shields.io/badge/Donation-Yoo.money-blue.svg)](https://yoomoney.ru/to/41001497003495)
+[![Boosty](https://img.shields.io/badge/Boosty-donate-orange.svg)](https://boosty.to/ponygames)
+[![Website](https://img.shields.io/badge/Website-tav--developer.itch.io-29a662.svg)](https://tav-developer.itch.io)
+[![License](https://img.shields.io/badge/License-MIT0-darkgray.svg)](#)
+[![Tag](https://img.shields.io/github/v/tag/tereshenkovav/Trixie16bit?color=00c2e8)](#)
+[![Downloads](https://img.shields.io/github/downloads/tereshenkovav/Trixie16bit/total?color=c87bff)](#)
 
 ## О проекте
 
