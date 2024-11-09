@@ -11,9 +11,7 @@ echo $BUILDTAG $BUILDCOMMIT $BUILDBRANCH
 
 VERSION=${BUILDTAG:1}
 
-echo $BUILDTAG > ../../bin/data/version.txt
-echo $BUILDCOMMIT >> ../../bin/data/version.txt
-echo $BUILDBRANCH >> ../../bin/data/version.txt
+printf "$BUILDTAG\r\n$BUILDCOMMIT\r\n$BUILDBRANCH\r\n" > ../../bin/data/version.txt
 
 appdir=/tmp/Trixie16bit.AppDir
 
@@ -44,7 +42,7 @@ cp -r ../../bin $appdir/usr/bin/game
 export ARCH=x86_64
 
 echo "en" > $appdir/usr/bin/game/data/deflang
-appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-EN-1.2.0-DOSbox-x86_64.AppImage
+appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-EN-$VERSION-DOSbox-x86_64.AppImage
 
 echo "ru" > $appdir/usr/bin/game/data/deflang
-appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-RU-1.2.0-DOSbox-x86_64.AppImage
+appimagetool-x86_64.AppImage $appdir /tmp/Trixie16bit-RU-$VERSION-DOSbox-x86_64.AppImage
