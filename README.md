@@ -96,3 +96,6 @@ qb.exe /l gratools.qlb trixie.bas
 запуске файла `build64.sh`, из каталога `setup/linux` если
 установлен AppImageKit и исполнимый файл DOSBox находится по пути `/usr/bin/dosbox`.
 
+Создание архива приложения и образа DMG под MacOS выполняется автоматически при
+запуске файла `make_app.sh`, из каталога `setup/mac`.
+Необходимые файлы DOSBox уже находятся в каталоге проекта.
