@@ -22,7 +22,7 @@
 
 * `bin` - каталог контента игры (графика, звуки, тексты), также содержит исполняемые файлы
 * `graphics` - иконки игры для дистрибутива и AppImage
-* `setup` - скрипты создания архива для DOS, дистрибутивов/архивов для Windows, и AppImage для Linux
+* `setup` - скрипты создания архива для DOS, дистрибутивов/архивов для Windows, AppImage для Linux и архивов/DMG для MacOS
 * `source` - исходный код игры для QuickBasic 4.5 и графическая библиотека [QbGraTools](https://github.com/tereshenkovav/QbGraTools), включенная в подкаталог engine
 
 ## Инструменты сборки
