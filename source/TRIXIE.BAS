@@ -228,6 +228,7 @@ CALL startFPSCounter
 lastjoyy = STICK(0) ' First need call STICK(0) for fill other axis
 lastjoyy = STICK(1)
 joymovestarted = FALSE
+joyfound = isJoystickPresent%
 
 DO WHILE TRUE
 
@@ -422,7 +423,8 @@ CASE CHR$(0) + "H": hero.vx = 0
 CASE CHR$(0) + "P": hero.vx = 0
 END SELECT
 
-' joystick controls
+' joystick controls ifjoystick found
+IF joyfound THEN
 IF STICK(0) < 64 THEN
   hero.vx = -HEROSPEED: lastdir = -1: joymovestarted = TRUE
 ELSE
@@ -446,6 +448,7 @@ END IF
 lastjoyy = STICK(1)
 IF STRIG(1) THEN CALL TryFire(lastdir)
 IF STRIG(5) THEN CALL TryShield
+END IF ' joystick controls
 
 IF (hero.x <= 10) AND (hero.vx < 0) THEN hero.vx = 0
 IF (hero.x >= 310 - herowait.W) AND (hero.vx > 0) THEN hero.vx = 0

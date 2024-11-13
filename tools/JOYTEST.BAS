@@ -1,16 +1,17 @@
 DEFINT A-Z
+'$INCLUDE: 'gratools.bi'
 
 DIM Event1A AS STRING
 DIM Event2A AS STRING
 DIM Event1B AS STRING
 DIM Event2B AS STRING
 
-START:
+start:
 
 CLS
 PRINT "  *************************************"
 PRINT "  *                                   *"
-PRINT "  *   Test DOS joystick               *"
+PRINT "  *  Test DOS joystick                *"
 PRINT "  *  Press Escape to exit             *"
 FOR i = 1 TO 16
   PRINT "  *                                   *"
@@ -18,6 +19,8 @@ NEXT i
 PRINT "  *************************************"
 
 WHILE 1 = 1
+  LOCATE 3, 25
+  IF isJoystickPresent% = 1 THEN PRINT "[Found]" ELSE PRINT "[NOT found]"
   LOCATE 6, 6
   PRINT "X of Joystick A:" + STR$(STICK(0)) + "  "
   LOCATE 7, 6
@@ -54,19 +57,19 @@ WHILE 1 = 1
 
   IF LEN(Event1A) > 30 THEN
     Event1A = ""
-    GOTO START
+    GOTO start
   END IF
   IF LEN(Event2A) > 30 THEN
     Event2A = ""
-    GOTO START
+    GOTO start
   END IF
   IF LEN(Event1B) > 30 THEN
     Event1B = ""
-    GOTO START
+    GOTO start
   END IF
   IF LEN(Event2B) > 30 THEN
     Event2B = ""
-    GOTO START
+    GOTO start
   END IF
 WEND
 
