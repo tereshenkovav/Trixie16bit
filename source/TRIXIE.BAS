@@ -225,10 +225,9 @@ CLS
 CALL startFPSCounter
 
 ' Game cicle
-lastjoyy = STICK(0) ' First need call STICK(0) for fill other axis
-lastjoyy = STICK(1)
-joymovestarted = FALSE
 joyfound = isJoystickPresent%
+lastjoyx = STICK(0)
+lastjoyy = STICK(1)
 
 DO WHILE TRUE
 
@@ -425,27 +424,26 @@ END SELECT
 
 ' joystick controls ifjoystick found
 IF joyfound THEN
-IF STICK(0) < 64 THEN
-  hero.vx = -HEROSPEED: lastdir = -1: joymovestarted = TRUE
-ELSE
-IF STICK(0) > 192 THEN
-  hero.vx = HEROSPEED: lastdir = 1: joymovestarted = TRUE
-ELSE
-  IF joymovestarted THEN
-    hero.vx = 0
-    joymovestarted = FALSE
-  END IF
+newjoyx = STICK(0)
+newjoyy = STICK(1)
+IF (lastjoyx > 64) AND (newjoyx <= 64) THEN
+  hero.vx = -HEROSPEED: lastdir = -1
 END IF
+IF (lastjoyx < 192) AND (newjoyx >= 192) THEN
+  hero.vx = HEROSPEED: lastdir = 1
 END IF
-IF (lastjoyy < 245) AND (STICK(1) >= 245) THEN
+IF (lastjoyx < 64) AND (newjoyx >= 64) THEN hero.vx = 0
+IF (lastjoyx > 192) AND (newjoyx <= 192) THEN hero.vx = 0
+IF (lastjoyy < 245) AND (newjoyy >= 245) THEN
   IF hero.y = Ypos(1) THEN TryJump (Ypos(2))
   IF hero.y = Ypos(2) THEN TryJump (Ypos(3))
 END IF
-IF (lastjoyy > 10) AND (STICK(1) <= 10) THEN
+IF (lastjoyy > 10) AND (newjoyy <= 10) THEN
   IF hero.y = Ypos(2) THEN TryJump (Ypos(1))
   IF hero.y = Ypos(3) THEN TryJump (Ypos(2))
 END IF
-lastjoyy = STICK(1)
+lastjoyx = newjoyx
+lastjoyy = newjoyy
 IF STRIG(1) THEN CALL TryFire(lastdir)
 IF STRIG(5) THEN CALL TryShield
 END IF ' joystick controls
