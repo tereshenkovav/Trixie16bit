@@ -1,19 +1,28 @@
-6
-CONTROLS JOYSTICK
-90
+9
+ABOUT
+130
 40
-Stick left / right  - walk
-20
-55
-Stick up - jump up to platform
-20
-65
-Stick down - jump down to platform
-20
-75
-Key 1 (A) - toss a fireball
-20
+  An action game about Trixie
+30
+60
+and collecting diamonds
+30
+70
+  Developed on QuickBasic 4.5
+30
 85
-Key 2 (B) - cast a force shield
-20
+and NASM assembler
+30
 95
+  Author Aleksandr V.
+30
+110
+Tereshenkov, home pages - 
+30
+120
+tav-developer.itch.io
+30
+130
+and github.com/tereshenkovav
+30
+140

@@ -1,8 +1,8 @@
 10
-CONTROLS KEYBOARD
-90
+CONTROLS
+130
 40
-Left / Right arrow - walk
+    Left / Right arrow - walk
 20
 55
 Up / Down arrow - stop

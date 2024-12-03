@@ -517,19 +517,3 @@ no_file_exist:
 	%include "popregs.asm"
         mov ax,0
 	retf 4
-
-global isJoystickPresent
-isJoystickPresent:
-	%include "pushregs.asm"
-
-	mov ah,84h
-	mov dx,0
-	int 15h
-	jc no_joystick
-        %include "popregs.asm"
-	mov ax,1
-        retf
-no_joystick:
-        %include "popregs.asm"
-	mov ax,0
-        retf

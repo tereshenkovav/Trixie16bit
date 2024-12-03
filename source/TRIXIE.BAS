@@ -225,10 +225,6 @@ CLS
 CALL startFPSCounter
 
 ' Game cicle
-joyfound = isJoystickPresent%
-lastjoyx = STICK(0)
-lastjoyy = STICK(1)
-
 DO WHILE TRUE
 
 t0 = TIMER
@@ -421,33 +417,6 @@ CASE CHR$(13): CALL TryShield
 CASE CHR$(0) + "H": hero.vx = 0
 CASE CHR$(0) + "P": hero.vx = 0
 END SELECT
-
-' joystick controls ifjoystick found
-IF joyfound THEN
-newjoyx = STICK(0)
-newjoyy = STICK(1)
-IF (lastjoyx > 64) AND (newjoyx <= 64) THEN
-  hero.vx = -HEROSPEED: lastdir = -1
-END IF
-IF (lastjoyx < 192) AND (newjoyx >= 192) THEN
-  hero.vx = HEROSPEED: lastdir = 1
-END IF
-IF (lastjoyx < 64) AND (newjoyx >= 64) THEN hero.vx = 0
-IF (lastjoyx > 192) AND (newjoyx <= 192) THEN hero.vx = 0
-IF (lastjoyy < 245) AND (newjoyy >= 245) THEN
-  IF hero.y = Ypos(1) THEN TryJump (Ypos(2))
-  IF hero.y = Ypos(2) THEN TryJump (Ypos(3))
-END IF
-IF (lastjoyy > 10) AND (newjoyy <= 10) THEN
-  IF hero.y = Ypos(2) THEN TryJump (Ypos(1))
-  IF hero.y = Ypos(3) THEN TryJump (Ypos(2))
-END IF
-lastjoyx = newjoyx
-lastjoyy = newjoyy
-IF STRIG(1) THEN CALL TryFire(lastdir)
-IF STRIG(5) THEN CALL TryShield
-END IF ' joystick controls
-
 IF (hero.x <= 10) AND (hero.vx < 0) THEN hero.vx = 0
 IF (hero.x >= 310 - herowait.W) AND (hero.vx > 0) THEN hero.vx = 0
 hero.x = hero.x + hero.vx
@@ -604,9 +573,9 @@ NEXT i
 CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
 CALL UpdateIndicator(ind)
 
-MaxHelpPage = 7
+MaxHelpPage = 6
 IF isFileExists%("data\credits.txt") = TRUE THEN
-  MaxHelpPage = 8
+  MaxHelpPage = 7
   OPEN "data\credits.txt" FOR INPUT AS #1
   p = 1
   WHILE NOT EOF(1)
@@ -872,11 +841,9 @@ FUNCTION RenderHelpPage%
     CALL DrawScene(5)
   CASE 6
     CALL DrawScene(6)
+    CALL drawString(buf(), font(), 240, 40, versionstr, GRAYCOLOR)
   CASE 7
     CALL DrawScene(7)
-    CALL drawString(buf(), font(), 240, 40, versionstr, GRAYCOLOR)
-  CASE 8
-    CALL DrawScene(8)
     FOR i = 1 TO 16
       CALL drawString(buf(), font(), 100, 50 + i * 10, creditlines(i), TEXTCOLOR)
     NEXT i
@@ -965,11 +932,9 @@ END SUB
 REM $DYNAMIC
 SUB TryFire (lastdir AS INTEGER)
 
-  IF fire THEN EXIT SUB
-
   mananeed = FIREMANACOST
   IF manacount < mananeed THEN EXIT SUB
- 
+
   IF soundon THEN PLAY soundfireball
 
   manacount = manacount - mananeed
@@ -1003,8 +968,6 @@ END SUB
 SUB TryShield
   mananeed = SHIELDMANACOST
   IF manacount < mananeed THEN EXIT SUB
-
-  IF shieldmode > 0 THEN EXIT SUB
 
   IF soundon THEN PLAY soundfireball
 
