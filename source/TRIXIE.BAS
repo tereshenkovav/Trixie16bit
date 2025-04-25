@@ -324,7 +324,6 @@ FOR i = 0 TO mcount - 1
       gameover = TRUE
       jump = TRUE
       teleport.TekFrame = 0
-      'GOTO endgame
     ELSE
       IF soundon THEN PLAY soundhit
     END IF
@@ -354,7 +353,6 @@ FOR i = 0 TO bcount - 1
       gameover = TRUE
       jump = TRUE
       teleport.TekFrame = 0
-      'GOTO endgame
     END IF
   END IF
   END IF
@@ -469,7 +467,6 @@ END SUB
 FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER, w2 AS INTEGER)
  
   IsBlockIntersect = FALSE
-  'EXIT FUNCTION
 
   xw1 = x1 + w1
   xw2 = x2 + w2
@@ -909,7 +906,6 @@ SUB SetCustomColors
 
 FOR i = 0 TO 3
   PALETTE BORDERC0 + i, 65536 * (20 + 10 * i) + 256 * (20 + 10 * i) + (20 + 10 * i)
-  'PALETTE BORDERC0 + i, 65536 * 63 + 256 * 45 + 8
 NEXT i
 
 FOR i = 0 TO 7
