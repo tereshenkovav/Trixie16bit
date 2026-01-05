@@ -417,10 +417,10 @@ CASE CHR$(0) + "P"
      IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
    END IF
 CASE CHR$(0) + "H"
-   IF Ypos(2) = hero.y THEN
-     CALL TryJump(Ypos(1))
+   IF Ypos(3) = hero.y THEN
+     CALL TryJump(Ypos(2))
    ELSE
-     IF Ypos(3) = hero.y THEN CALL TryJump(Ypos(1))
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(1))
    END IF
 CASE CHR$(32): CALL TryFire(lastdir)
 CASE CHR$(13): CALL TryShield
