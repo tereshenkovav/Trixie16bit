@@ -5,7 +5,7 @@ CONTROLS
     Left / Right arrow - walk
 20
 55
-Up / Down arrow - stop
+Up / Down arrow - jump up/down
 20
 65
 1 - jump to the upper platform

@@ -410,6 +410,18 @@ CASE "1": CALL TryJump(Ypos(1))
 CASE "2": CALL TryJump(Ypos(2))
 CASE "3": CALL TryJump(Ypos(3))
 CASE CHR$(0) + CHR$(68): DO WHILE INKEY$ = "": LOOP
+CASE CHR$(0) + "P"
+   IF Ypos(1) = hero.y THEN
+     CALL TryJump(Ypos(2))
+   ELSE
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
+   END IF
+CASE CHR$(0) + "H"
+   IF Ypos(2) = hero.y THEN
+     CALL TryJump(Ypos(1))
+   ELSE
+     IF Ypos(3) = hero.y THEN CALL TryJump(Ypos(1))
+   END IF
 CASE CHR$(32): CALL TryFire(lastdir)
 CASE CHR$(13): CALL TryShield
 END SELECT
