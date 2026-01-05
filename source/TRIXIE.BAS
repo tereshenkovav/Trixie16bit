@@ -5,6 +5,8 @@ DEFINT A-Z
 CLS
 SCREEN 13
 
+CALL setNewKeyHandler
+
 soundon = TRUE
 
 CALL LoadOpt
@@ -147,7 +149,7 @@ CALL updateFPSCounter
 k$ = INKEY$
 
 SELECT CASE k$
-CASE CHR$(27): END
+CASE CHR$(27): CALL setOldKeyHandler: END
 CASE CHR$(13), CHR$(32):
   IF teksel = 1 THEN
     casual = TRUE
@@ -178,7 +180,7 @@ CASE CHR$(13), CHR$(32):
     DO WHILE RenderHelpPage = TRUE: LOOP
     GOTO mainmenu
   END IF
-  IF teksel = 6 THEN END
+  IF teksel = 6 THEN CALL setOldKeyHandler: END
 CASE CHR$(0) + "H":
   IF teksel > 1 THEN
     teksel = teksel - 1
@@ -245,7 +247,7 @@ FOR i = 0 TO mcount - 1
 NEXT i
 
 IF hitmode MOD 4 < 2 AND countdown = 0 THEN
-  IF hero.vx = 0 THEN
+  IF isKeyPressed(75) + isKeyPressed(77) = 0 THEN
     IF lastdir = 1 THEN
       CALL drawSpriteTransp(buf(), sprites(), herowait.BufPos, hero.x, hero.y - herowait.H)
     ELSE
@@ -407,17 +409,18 @@ CASE CHR$(27)
 CASE "1": CALL TryJump(Ypos(1))
 CASE "2": CALL TryJump(Ypos(2))
 CASE "3": CALL TryJump(Ypos(3))
-CASE CHR$(0) + "K": hero.vx = -HEROSPEED: lastdir = -1
-CASE CHR$(0) + "M": hero.vx = HEROSPEED: lastdir = 1
 CASE CHR$(0) + CHR$(68): DO WHILE INKEY$ = "": LOOP
 CASE CHR$(32): CALL TryFire(lastdir)
 CASE CHR$(13): CALL TryShield
-CASE CHR$(0) + "H": hero.vx = 0
-CASE CHR$(0) + "P": hero.vx = 0
 END SELECT
+
+IF isKeyPressed(75) THEN hero.vx = -HEROSPEED: lastdir = -1
+IF isKeyPressed(77) THEN hero.vx = HEROSPEED: lastdir = 1
+
 IF (hero.x <= 10) AND (hero.vx < 0) THEN hero.vx = 0
 IF (hero.x >= 310 - herowait.W) AND (hero.vx > 0) THEN hero.vx = 0
 hero.x = hero.x + hero.vx
+hero.vx = 0
 END IF
 
 DO WHILE INKEY$ <> "": LOOP
