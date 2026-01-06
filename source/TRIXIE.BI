@@ -97,10 +97,10 @@ DIM SHARED slang(LANGCOUNT) AS Sprite
 DIM SHARED starlight AS Sprite
 
 DIM SHARED hero AS GameObject
-DIM SHARED fireobj AS GameObject
+DIM SHARED fireobj(0 TO 2) AS GameObject
+DIM SHARED firecount AS INTEGER
 DIM SHARED targety AS INTEGER
 DIM SHARED jump AS INTEGER
-DIM SHARED fire AS INTEGER
 DIM SHARED manacount AS INTEGER
 DIM SHARED heartcount AS INTEGER
 DIM SHARED bonuscount AS INTEGER

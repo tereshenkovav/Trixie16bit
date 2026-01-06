@@ -203,7 +203,6 @@ startgame:
 hero.y = Ypos(2): hero.x = 160: hero.vx = 0
 
 jump = FALSE
-fire = FALSE
 shieldmode = 0
 victory = FALSE
 manacount = MAXMANA
@@ -221,6 +220,7 @@ hidehero = FALSE
 countdown = 0
 mcount = 0
 bcount = 0
+firecount = 0
 ' Game init end
 
 CLS
@@ -266,13 +266,13 @@ IF shieldmode > 0 AND countdown = 0 THEN
   CALL drawAnimationTransp(buf(), sshield(), shield, hero.x - 11 + 8, hero.y - 50 + 8)
 END IF
 
-IF fire = TRUE THEN
-  IF fireobj.vx > 0 THEN
-    CALL drawAnimationTransp(buf(), sprites(), fireball, fireobj.x, fireobj.y - fireball.H)
+FOR i = 0 TO firecount - 1
+  IF fireobj(i).vx > 0 THEN
+    CALL drawAnimationTransp(buf(), sprites(), fireball, fireobj(i).x, fireobj(i).y - fireball.H)
   ELSE
-    CALL drawAnimationTranspMirror(buf(), sprites(), fireball, fireobj.x, fireobj.y - fireball.H)
+    CALL drawAnimationTranspMirror(buf(), sprites(), fireball, fireobj(i).x, fireobj(i).y - fireball.H)
   END IF
-END IF
+NEXT i
 
 IF jump = TRUE THEN
   CALL drawAnimationTransp(buf(), sprites(), teleport, hero.x, hero.y - teleport.H - 5)
@@ -296,11 +296,11 @@ IF jump = TRUE THEN
   IF teleport.TekFrame = 8 THEN jump = FALSE
 END IF
 
-IF fire = TRUE THEN
-  fireobj.x = fireobj.x + fireobj.vx
-  IF fireobj.x < 0 THEN fire = FALSE
-  IF fireobj.x > 320 - fireball.W THEN fire = FALSE
-END IF
+FOR i = 0 TO firecount - 1
+  fireobj(i).x = fireobj(i).x + fireobj(i).vx
+  IF fireobj(i).x < 0 THEN fireobj(i).killed = TRUE
+  IF fireobj(i).x > 320 - fireball.W THEN fireobj(i).killed = TRUE
+NEXT i
 
 IF hitmode > 0 THEN hitmode = hitmode - 1
 IF shieldmode > 0 THEN shieldmode = shieldmode - 1
@@ -335,11 +335,11 @@ FOR i = 0 TO mcount - 1
   END IF
   END IF
 
-  IF fire = TRUE THEN
-  IF (mx(i).y = fireobj.y) THEN
-    IF IsBlockIntersect(mx(i).x, monsterarr(mx(i).tag).W, fireobj.x, fireball.W) THEN mx(i).killed = TRUE
+  FOR j = 0 TO firecount - 1
+  IF (mx(i).y = fireobj(j).y) THEN
+    IF IsBlockIntersect(mx(i).x, monsterarr(mx(i).tag).W, fireobj(j).x, fireball.W) THEN mx(i).killed = TRUE
   END IF
-  END IF
+  NEXT j
 NEXT i
 
 IF gameover = FALSE THEN
@@ -363,6 +363,7 @@ END IF
 
 CALL RemoveKilledGameObjects(mx(), mcount)
 CALL RemoveKilledGameObjects(bx(), bcount)
+CALL RemoveKilledGameObjects(fireobj(), firecount)
 
 nextmana = nextmana - 1
 IF nextmana = 0 THEN
@@ -949,15 +950,16 @@ SUB TryFire (lastdir AS INTEGER)
   IF soundon THEN PLAY soundfireball
 
   manacount = manacount - mananeed
-  fire = TRUE
-  fireobj.y = hero.y
+  fireobj(firecount).y = hero.y
+  fireobj(firecount).killed = FALSE
   IF lastdir > 0 THEN
-    fireobj.vx = FIRESPEED
-    fireobj.x = hero.x + herowait.W
+    fireobj(firecount).vx = FIRESPEED
+    fireobj(firecount).x = hero.x + herowait.W
   ELSE
-    fireobj.vx = -FIRESPEED
-    fireobj.x = hero.x - fireball.W
+    fireobj(firecount).vx = -FIRESPEED
+    fireobj(firecount).x = hero.x - fireball.W
   END IF
+  firecount = firecount + 1
                  
 END SUB
 
