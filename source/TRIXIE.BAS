@@ -267,7 +267,7 @@ IF shieldmode > 0 AND countdown = 0 THEN
 END IF
 
 IF fire = TRUE THEN
-  IF lastdir = 1 THEN
+  IF fireobj.vx > 0 THEN
     CALL drawAnimationTransp(buf(), sprites(), fireball, fireobj.x, fireobj.y - fireball.H)
   ELSE
     CALL drawAnimationTranspMirror(buf(), sprites(), fireball, fireobj.x, fireobj.y - fireball.H)
