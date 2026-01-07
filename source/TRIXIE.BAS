@@ -8,7 +8,9 @@ SCREEN 13
 CALL setNewKeyHandler
 
 soundon = TRUE
-CALL readJoystickByPort(x, y, a, b, joymissed)
+CALL readJoystickByPort(joycx, joycy, joya, joyb, joymissed)
+joydx = joycx \ 2
+joydy = joycy \ 2
 joymissed = 1 - joymissed
 joyon = FALSE
 mousemissed = isMouseDriverPresent% = 0
@@ -112,10 +114,10 @@ IF tekmenu = 0 THEN
   CALL drawSprite(buf(), sprites(), slang(teklang).BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
 ELSE
   CALL drawString(buf(), font(), 120, spos(1) + 7, menusopt$(1), TEXTCOLOR)
-  c = IfThen(mousemissed, 0, TEXTCOLOR, GRAYCOLOR)
-  CALL drawString(buf(), font(), 120, spos(2) + 7, menusopt$(2), c)
-  c = IfThen(joymissed, 0, TEXTCOLOR, GRAYCOLOR)
-  CALL drawString(buf(), font(), 120, spos(3) + 7, menusopt$(3), c)
+  C = IfThen(mousemissed, 0, TEXTCOLOR, GRAYCOLOR)
+  CALL drawString(buf(), font(), 120, spos(2) + 7, menusopt$(2), C)
+  C = IfThen(joymissed, 0, TEXTCOLOR, GRAYCOLOR)
+  CALL drawString(buf(), font(), 120, spos(3) + 7, menusopt$(3), C)
   CALL drawString(buf(), font(), 120, spos(4) + 7, menusopt$(4), TEXTCOLOR)
 END IF
 
@@ -260,7 +262,7 @@ FOR i = 0 TO mcount - 1
 NEXT i
 
 IF hitmode MOD 4 < 2 AND countdown = 0 THEN
-  IF isKeyPressed(75) + isKeyPressed(77) = 0 THEN
+  IF hero.vx = 0 THEN
     IF lastdir = 1 THEN
       CALL drawSpriteTransp(buf(), sprites(), herowait.BufPos, hero.x, hero.y - herowait.H)
     ELSE
@@ -440,13 +442,39 @@ CASE CHR$(32): CALL TryFire(lastdir)
 CASE CHR$(13): CALL TryShield
 END SELECT
 
+hero.vx = 0 'only after draw pony sprite
+
 IF isKeyPressed(75) THEN hero.vx = -HEROSPEED: lastdir = -1
 IF isKeyPressed(77) THEN hero.vx = HEROSPEED: lastdir = 1
+
+' joystick block
+IF joyon THEN
+  CALL readJoystickByPort(joyx, joyy, joya, joyb, tmp)
+  IF joyx - joycx > joydx THEN hero.vx = HEROSPEED: lastdir = 1
+  IF joycx - joyx > joydx THEN hero.vx = -HEROSPEED: lastdir = -1
+  IF joyy - joycy > joydy THEN
+   IF Ypos(1) = hero.y THEN
+     CALL TryJump(Ypos(2))
+   ELSE
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
+   END IF
+  END IF
+  IF joycy - joyy > joydy THEN
+   IF Ypos(3) = hero.y THEN
+     CALL TryJump(Ypos(2))
+   ELSE
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(1))
+   END IF
+  END IF
+  IF (oldjoya = 0) AND (joya <> 0) THEN CALL TryFire(lastdir)
+  IF (oldjoyb = 0) AND (joyb <> 0) THEN CALL TryShield
+  oldjoya = joya
+  oldjoyb = joyb
+END IF
 
 IF (hero.x <= 10) AND (hero.vx < 0) THEN hero.vx = 0
 IF (hero.x >= 310 - herowait.W) AND (hero.vx > 0) THEN hero.vx = 0
 hero.x = hero.x + hero.vx
-hero.vx = 0
 END IF
 
 DO WHILE INKEY$ <> "": LOOP
@@ -1006,7 +1034,7 @@ SUB TryFire (lastdir AS INTEGER)
 END SUB
 
 SUB TryJump (y AS INTEGER)
-
+  IF jump THEN EXIT SUB
   IF hero.y = y THEN EXIT SUB
   
   IF ABS(hero.y - y) = Ypos(3) - Ypos(1) THEN mananeed = 2 ELSE mananeed = 1
