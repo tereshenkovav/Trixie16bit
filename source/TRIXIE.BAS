@@ -8,6 +8,11 @@ SCREEN 13
 CALL setNewKeyHandler
 
 soundon = TRUE
+CALL readJoystickByPort(x, y, a, b, joymissed)
+joymissed = 1 - joymissed
+joyon = FALSE
+mousemissed = isMouseDriverPresent% = 0
+mouseon = FALSE
 
 CALL LoadOpt
 CALL LoadLangs
@@ -85,6 +90,7 @@ CLS
 scenestage = TRUE
 scenepos = -150
 teksel = 1
+tekmenu = 0
 
 CALL startFPSCounter
 
@@ -99,10 +105,19 @@ CALL setUpBuffer(buf(), 320, 160, 0)
 CALL DrawBorder(62, 180, 0, 100)
 
 CALL drawSpriteTransp(buf(), sprites(), selector.BufPos, 90, spos(teksel))
-FOR i = 1 TO 6
-  CALL drawString(buf(), font(), 120, spos(i) + 7, menus$(i), TEXTCOLOR)
-NEXT i
-CALL drawSprite(buf(), sprites(), slang(teklang).BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
+IF tekmenu = 0 THEN
+  FOR i = 1 TO MENUSIZE
+    CALL drawString(buf(), font(), 120, spos(i) + 7, menus$(i), TEXTCOLOR)
+  NEXT i
+  CALL drawSprite(buf(), sprites(), slang(teklang).BufPos, 124 + 8 * LEN(menus$(3)), spos(3) + 5)
+ELSE
+  CALL drawString(buf(), font(), 120, spos(1) + 7, menusopt$(1), TEXTCOLOR)
+  c = IfThen(mousemissed, 0, TEXTCOLOR, GRAYCOLOR)
+  CALL drawString(buf(), font(), 120, spos(2) + 7, menusopt$(2), c)
+  c = IfThen(joymissed, 0, TEXTCOLOR, GRAYCOLOR)
+  CALL drawString(buf(), font(), 120, spos(3) + 7, menusopt$(3), c)
+  CALL drawString(buf(), font(), 120, spos(4) + 7, menusopt$(4), TEXTCOLOR)
+END IF
 
 FOR x = 0 TO 7
   CALL drawSprite(buf(), sprites(), gndstone.BufPos, x * gndstone.W, 160 - gndstone.H)
@@ -151,14 +166,9 @@ k$ = INKEY$
 SELECT CASE k$
 CASE CHR$(27): CALL setOldKeyHandler: END
 CASE CHR$(13), CHR$(32):
-  IF teksel = 1 THEN
-    casual = TRUE
-    GOTO startgame
-  END IF
-  IF teksel = 2 THEN
-    casual = FALSE
-    GOTO startgame
-  END IF
+ IF tekmenu = 0 THEN
+  IF teksel = 1 THEN casual = TRUE: GOTO startgame
+  IF teksel = 2 THEN casual = FALSE: GOTO startgame
   IF teksel = 3 THEN
     teklang = teklang + 1
     IF teklang >= LANGCOUNT THEN teklang = 0
@@ -170,10 +180,7 @@ CASE CHR$(13), CHR$(32):
     CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
     PUT (35, 10), slogos(logo.BufPos), PSET
   END IF
-  IF teksel = 4 THEN
-    soundon = 1 - soundon
-    CALL LoadTexts
-  END IF
+  IF teksel = 4 THEN tekmenu = 1: teksel = 1
   IF teksel = 5 THEN
     CLS
     helppage = 1
@@ -181,13 +188,19 @@ CASE CHR$(13), CHR$(32):
     GOTO mainmenu
   END IF
   IF teksel = 6 THEN CALL setOldKeyHandler: END
+ ELSE
+  IF teksel = 1 THEN soundon = 1 - soundon: CALL LoadTexts
+  IF (teksel = 2) AND (mousemissed = 0) THEN mouseon = 1 - mouseon: CALL LoadTexts
+  IF (teksel = 3) AND (joymissed = 0) THEN joyon = 1 - joyon: CALL LoadTexts
+  IF teksel = 4 THEN tekmenu = 0: teksel = 1
+ END IF
 CASE CHR$(0) + "H":
   IF teksel > 1 THEN
     teksel = teksel - 1
     IF soundon THEN PLAY soundmenu
   END IF
 CASE CHR$(0) + "P":
-  IF teksel < 6 THEN
+  IF teksel < IfThen(tekmenu, 0, MENUSIZE, MENUOPTSIZE) THEN
     teksel = teksel + 1
     IF soundon THEN PLAY soundmenu
   END IF
@@ -480,6 +493,10 @@ SUB DrawScene (scenen AS INTEGER)
 
 END SUB
 
+FUNCTION IfThen% (v1 AS INTEGER, v2 AS INTEGER, r1 AS INTEGER, r2 AS INTEGER)
+  IF v1 = v2 THEN IfThen% = r1 ELSE IfThen% = r2
+END FUNCTION
+
 FUNCTION IsBlockIntersect% (x1 AS INTEGER, w1 AS INTEGER, x2 AS INTEGER, w2 AS INTEGER)
  
   IsBlockIntersect = FALSE
@@ -660,17 +677,42 @@ SUB LoadTexts
   LINE INPUT #1, menus$(4)
   LINE INPUT #1, menus$(5)
   LINE INPUT #1, menus$(6)
+  LINE INPUT #1, menusopt$(1)
+  LINE INPUT #1, menusopt$(2)
+  LINE INPUT #1, menusopt$(3)
+  LINE INPUT #1, menusopt$(4)
   LINE INPUT #1, msgon$
   LINE INPUT #1, msgoff$
+  LINE INPUT #1, msgmissed$
   LINE INPUT #1, msgpauseinfo$
   LINE INPUT #1, msgpauseesc$
   LINE INPUT #1, msgpausespace$
   CLOSE #1
 
   IF soundon THEN
-    menus$(4) = menus$(4) + msgon$
+    menusopt$(1) = menusopt$(1) + msgon$
   ELSE
-    menus$(4) = menus$(4) + msgoff$
+    menusopt$(1) = menusopt$(1) + msgoff$
+  END IF
+
+  IF mousemissed THEN
+    menusopt$(2) = menusopt$(2) + msgmissed$
+  ELSE
+    IF mouseon THEN
+      menusopt$(2) = menusopt$(2) + msgon$
+    ELSE
+      menusopt$(2) = menusopt$(2) + msgoff$
+    END IF
+  END IF
+
+  IF joymissed THEN
+    menusopt$(3) = menusopt$(3) + msgmissed$
+  ELSE
+    IF joyon THEN
+      menusopt$(3) = menusopt$(3) + msgon$
+    ELSE
+      menusopt$(3) = menusopt$(3) + msgoff$
+    END IF
   END IF
 
 END SUB
