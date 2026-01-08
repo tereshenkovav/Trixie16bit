@@ -15,6 +15,7 @@ joymissed = 1 - joymissed
 joyon = FALSE
 mousemissed = isMouseDriverPresent% = 0
 mouseon = FALSE
+CALL getMouseResolution(mouserx, mousery)
 
 CALL LoadOpt
 CALL LoadLangs
@@ -166,7 +167,12 @@ CALL updateFPSCounter
 k$ = INKEY$
 
 SELECT CASE k$
-CASE CHR$(27): CALL setOldKeyHandler: END
+CASE CHR$(27)
+ IF tekmenu = 0 THEN
+   CALL setOldKeyHandler: END
+ ELSE
+   tekmenu = 0: teksel = 1
+ END IF
 CASE CHR$(13), CHR$(32):
  IF tekmenu = 0 THEN
   IF teksel = 1 THEN casual = TRUE: GOTO startgame
@@ -465,17 +471,17 @@ IF mouseon THEN
   IF (mouser <> 0) AND (oldmouser = 0) THEN CALL TryShield
 
   IF (mousex = 0) AND (mousex < oldmousex) THEN
-    CALL setMousePos(639, mousey): mousex = 639
+    CALL setMousePos(mouserx, mousey): mousex = mouserx
   ELSE
-    IF (mousex > 630) AND (mousex > oldmousex) THEN
+    IF (mousex >= mouserx) AND (mousex > oldmousex) THEN
       CALL setMousePos(0, mousey): mousex = 0
     END IF
   END IF
 
   IF (mousey = 0) AND (mousey < oldmousey) THEN
-    CALL setMousePos(mousex, 199): mousey = 199
+    CALL setMousePos(mousex, mousery): mousey = mousery
   ELSE
-    IF (mousey > 190) AND (mousey > oldmousey) THEN
+    IF (mousey >= mousery) AND (mousey > oldmousey) THEN
       CALL setMousePos(mousex, 0): mousey = 0
     END IF
   END IF
@@ -513,7 +519,6 @@ DO WHILE INKEY$ <> CHR$(32): LOOP
 
 GOTO mainmenu
 
-REM $DYNAMIC
 SUB DrawBorder (borderx AS INTEGER, borderw AS INTEGER, bordery AS INTEGER, borderh AS INTEGER)
 
 FOR i = 0 TO 6
