@@ -1,4 +1,19 @@
-1
-CREDITS
-100
+6
+CONTROLS MOUSE
+90
 40
+Mouse left / right  - walk
+20
+55
+Mouse up - jump up to platform
+20
+65
+Mouse down - jump down to platform
+20
+75
+Left button - toss a fireball
+20
+85
+Right button - cast a force shield
+20
+95

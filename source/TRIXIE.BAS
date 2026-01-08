@@ -519,6 +519,7 @@ DO WHILE INKEY$ <> CHR$(32): LOOP
 
 GOTO mainmenu
 
+REM $DYNAMIC
 SUB DrawBorder (borderx AS INTEGER, borderw AS INTEGER, bordery AS INTEGER, borderh AS INTEGER)
 
 FOR i = 0 TO 6
@@ -653,9 +654,9 @@ NEXT i
 CALL LoadSpriteInBuf(slogos(), logo, "data\logo_" + langs$(teklang) + ".pcx")
 CALL UpdateIndicator(ind)
 
-MaxHelpPage = 6
+MaxHelpPage = 8
 IF isFileExists%("data\credits.txt") = TRUE THEN
-  MaxHelpPage = 7
+  MaxHelpPage = 9
   OPEN "data\credits.txt" FOR INPUT AS #1
   p = 1
   WHILE NOT EOF(1)
@@ -946,9 +947,13 @@ FUNCTION RenderHelpPage%
     CALL DrawScene(5)
   CASE 6
     CALL DrawScene(6)
-    CALL drawString(buf(), font(), 240, 40, versionstr, GRAYCOLOR)
   CASE 7
     CALL DrawScene(7)
+  CASE 8
+    CALL DrawScene(8)
+    CALL drawString(buf(), font(), 240, 40, versionstr, GRAYCOLOR)
+  CASE 9
+    CALL DrawScene(9)
     FOR i = 1 TO 16
       CALL drawString(buf(), font(), 100, 50 + i * 10, creditlines(i), TEXTCOLOR)
     NEXT i

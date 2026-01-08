@@ -75,7 +75,7 @@ Ypos(2) = 105
 Ypos(3) = 170
 
 DIM SHARED opt AS Options
-DIM SHARED scenes(112) AS TextBlock
+DIM SHARED scenes(144) AS TextBlock
 DIM SHARED fireball AS Animation
 DIM SHARED monsterarr(1 TO 5) AS Animation
 DIM SHARED shield AS Animation
