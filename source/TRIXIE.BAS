@@ -426,51 +426,32 @@ CASE "1": CALL TryJump(Ypos(1))
 CASE "2": CALL TryJump(Ypos(2))
 CASE "3": CALL TryJump(Ypos(3))
 CASE CHR$(0) + CHR$(68): DO WHILE INKEY$ = "": LOOP
-CASE CHR$(0) + "P"
-   IF Ypos(1) = hero.y THEN
-     CALL TryJump(Ypos(2))
-   ELSE
-     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
-   END IF
-CASE CHR$(0) + "H"
-   IF Ypos(3) = hero.y THEN
-     CALL TryJump(Ypos(2))
-   ELSE
-     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(1))
-   END IF
+CASE CHR$(0) + "P": CALL TryJumpDown
+CASE CHR$(0) + "H": CALL TryJumpUp
 CASE CHR$(32): CALL TryFire(lastdir)
 CASE CHR$(13): CALL TryShield
 END SELECT
 
-hero.vx = 0 'only after draw pony sprite
+hero.vx = 0
 
-IF isKeyPressed(75) THEN hero.vx = -HEROSPEED: lastdir = -1
-IF isKeyPressed(77) THEN hero.vx = HEROSPEED: lastdir = 1
+IF isKeyPressed(75) THEN hero.vx = -HEROSPEED
+IF isKeyPressed(77) THEN hero.vx = HEROSPEED
 
 ' joystick block
 IF joyon THEN
   CALL readJoystickByPort(joyx, joyy, joya, joyb, tmp)
-  IF joyx - joycx > joydx THEN hero.vx = HEROSPEED: lastdir = 1
-  IF joycx - joyx > joydx THEN hero.vx = -HEROSPEED: lastdir = -1
-  IF joyy - joycy > joydy THEN
-   IF Ypos(1) = hero.y THEN
-     CALL TryJump(Ypos(2))
-   ELSE
-     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
-   END IF
-  END IF
-  IF joycy - joyy > joydy THEN
-   IF Ypos(3) = hero.y THEN
-     CALL TryJump(Ypos(2))
-   ELSE
-     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(1))
-   END IF
-  END IF
+  IF joyx - joycx > joydx THEN hero.vx = HEROSPEED
+  IF joycx - joyx > joydx THEN hero.vx = -HEROSPEED
+  IF joyy - joycy > joydy THEN CALL TryJumpDown
+  IF joycy - joyy > joydy THEN CALL TryJumpUp
   IF (oldjoya = 0) AND (joya <> 0) THEN CALL TryFire(lastdir)
   IF (oldjoyb = 0) AND (joyb <> 0) THEN CALL TryShield
   oldjoya = joya
   oldjoyb = joyb
 END IF
+
+IF hero.vx > 0 THEN lastdir = 1
+IF hero.vx < 0 THEN lastdir = -1
 
 IF (hero.x <= 10) AND (hero.vx < 0) THEN hero.vx = 0
 IF (hero.x >= 310 - herowait.W) AND (hero.vx > 0) THEN hero.vx = 0
@@ -1048,6 +1029,24 @@ SUB TryJump (y AS INTEGER)
   teleport.TekFrame = 0
 END SUB
 
+REM $STATIC
+SUB TryJumpDown
+   IF Ypos(1) = hero.y THEN
+     CALL TryJump(Ypos(2))
+   ELSE
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(3))
+   END IF
+END SUB
+
+SUB TryJumpUp
+   IF Ypos(3) = hero.y THEN
+     CALL TryJump(Ypos(2))
+   ELSE
+     IF Ypos(2) = hero.y THEN CALL TryJump(Ypos(1))
+   END IF
+END SUB
+
+REM $DYNAMIC
 SUB TryShield
   mananeed = SHIELDMANACOST
   IF manacount < mananeed THEN EXIT SUB
