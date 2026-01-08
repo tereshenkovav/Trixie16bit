@@ -236,6 +236,8 @@ countdown = 0
 mcount = 0
 bcount = 0
 firecount = 0
+IF mouseon THEN CALL getMouse(oldmousex, oldmousey, oldmousel, oldmouser)
+
 ' Game init end
 
 CLS
@@ -448,6 +450,40 @@ IF joyon THEN
   IF (oldjoyb = 0) AND (joyb <> 0) THEN CALL TryShield
   oldjoya = joya
   oldjoyb = joyb
+END IF
+
+' mouse block
+IF mouseon THEN
+  CALL getMouse(mousex, mousey, mousel, mouser)
+  LOCATE 1, 1
+  'PRINT oldmousex; mousex
+  IF mousex - oldmousex > 3 THEN hero.vx = HEROSPEED
+  IF mousex - oldmousex < -3 THEN hero.vx = -HEROSPEED
+  IF mousey - oldmousey > 30 THEN CALL TryJumpDown
+  IF mousey - oldmousey < -30 THEN CALL TryJumpUp
+  IF (mousel <> 0) AND (oldmousel = 0) THEN CALL TryFire(lastdir)
+  IF (mouser <> 0) AND (oldmouser = 0) THEN CALL TryShield
+
+  IF (mousex = 0) AND (mousex < oldmousex) THEN
+    CALL setMousePos(639, mousey): mousex = 639
+  ELSE
+    IF (mousex > 630) AND (mousex > oldmousex) THEN
+      CALL setMousePos(0, mousey): mousex = 0
+    END IF
+  END IF
+
+  IF (mousey = 0) AND (mousey < oldmousey) THEN
+    CALL setMousePos(mousex, 199): mousey = 199
+  ELSE
+    IF (mousey > 190) AND (mousey > oldmousey) THEN
+      CALL setMousePos(mousex, 0): mousey = 0
+    END IF
+  END IF
+
+  oldmousex = mousex
+  oldmousey = mousey
+  oldmousel = mousel
+  oldmouser = mouser
 END IF
 
 IF hero.vx > 0 THEN lastdir = 1
